@@ -29,7 +29,12 @@
       imports = with inputs; [ treefmt-nix.flakeModule ];
 
       perSystem =
-        { self', pkgs, system, ... }:
+        {
+          self',
+          pkgs,
+          system,
+          ...
+        }:
         let
           version = "0.0.1";
         in
@@ -40,6 +45,12 @@
           };
 
           packages.default = pkgs.callPackage ./nix { inherit version; };
+
+          apps.argconv = {
+            type = "app";
+            program = "${self'.packages.default}/bin/argconv";
+            meta.description = "Implementation of dev.unmango.cmd";
+          };
 
           apps.protocmd = {
             type = "app";
@@ -65,6 +76,7 @@
           };
 
           treefmt.programs = {
+            actionlint.enable = true;
             nixfmt.enable = true;
             gofmt.enable = true;
           };

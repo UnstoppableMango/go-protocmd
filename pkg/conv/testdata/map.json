@@ -1,0 +1,17 @@
+{
+  "name": "test.proto",
+  "syntax": "proto3",
+  "package": "test",
+  "messageType": [{
+    "name": "TestMsg",
+    "field": [{"name": "labels", "number": 1, "label": "LABEL_REPEATED", "type": "TYPE_MESSAGE", "typeName": ".test.TestMsg.LabelsEntry"}],
+    "nestedType": [{
+      "name": "LabelsEntry",
+      "field": [
+        {"name": "key",   "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_STRING"},
+        {"name": "value", "number": 2, "label": "LABEL_OPTIONAL", "type": "TYPE_STRING"}
+      ],
+      "options": {"mapEntry": true}
+    }]
+  }]
+}
