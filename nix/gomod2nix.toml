@@ -102,8 +102,8 @@ schema = 3
     hash = 'sha256-YAjyYpq5BXCosVJtvYLWFG1t4gma2ylzc7ILLoj/hD8='
 
   [mod.'github.com/unmango/go']
-    version = 'v0.16.2'
-    hash = 'sha256-53+LL8PAa4N6PIssCLKlCKR1qnUtAHVlUXNfmuqYIsg='
+    version = 'v0.16.3'
+    hash = 'sha256-kmXa6gaPlfaiwmPH4hE8fFciqm/4w4aIuvrBOwJnLkI='
 
   [mod.'github.com/unstoppablemango/godec']
     version = 'v0.0.0-20260518055026-60e3301453c7'

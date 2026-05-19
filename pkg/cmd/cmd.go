@@ -22,11 +22,8 @@ func (Server) Run(ctx context.Context, req *cmdv1alpha1.RunRequest) (*cmdv1alpha
 		return nil, fmt.Errorf("process is required")
 	}
 
-	cmd, err := process.CommandContext(ctx, req.GetProcess())
-	if err != nil {
-		return nil, fmt.Errorf("converting process to cmd: %w", err)
-	}
-	if err = cmd.Run(); err != nil {
+	cmd := process.CommandContext(ctx, req.GetProcess())
+	if err := cmd.Run(); err != nil {
 		return nil, err
 	}
 
