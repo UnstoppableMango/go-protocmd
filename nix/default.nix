@@ -5,7 +5,7 @@
   version,
 }:
 buildGoApplication {
-  pname = "";
+  pname = "go-protocmd";
   inherit version;
 
   src = lib.cleanSource ../.;
