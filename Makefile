@@ -1,3 +1,4 @@
+BUF       ?= nix develop -c buf
 GO        ?= nix develop -c go
 GOMOD2NIX ?= nix develop -c gomod2nix
 GINKGO    ?= nix develop -c ginkgo
@@ -19,10 +20,10 @@ check:
 format fmt:
 	nix fmt
 
-tidy: go.sum
+tidy: go.sum nix/gomod2nix.toml
 
 go.sum: go.mod ${GO_SRC}
 	$(GO) mod tidy
 
-gomod2nix.toml: go.sum ${GO_SRC}
-	$(GOMOD2NIX) generate
+nix/gomod2nix.toml: go.sum ${GO_SRC}
+	$(GOMOD2NIX) generate --dir ${CURDIR} --outdir ${@D}

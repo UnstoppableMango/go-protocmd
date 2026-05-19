@@ -1,0 +1,26 @@
+schema = 3
+
+[mod]
+  [mod.'golang.org/x/net']
+    version = 'v0.51.0'
+    hash = 'sha256-bLDpVRTPWM7IowHw1jdr9EPCRQNAVFsPwz69olySah4='
+
+  [mod.'golang.org/x/sys']
+    version = 'v0.42.0'
+    hash = 'sha256-LhNedvUEJbPYyR6EoU91rfOr3DBBoauLOcMcyqghEos='
+
+  [mod.'golang.org/x/text']
+    version = 'v0.34.0'
+    hash = 'sha256-wGKd1JkeiFROibvo2kkAuQ7JajSIfV4utGaoGbTQhQM='
+
+  [mod.'google.golang.org/genproto/googleapis/rpc']
+    version = 'v0.0.0-20260226221140-a57be14db171'
+    hash = 'sha256-pnGJ+eFKWgDoT8oYp88FEOaafs+WJe3vsZHyZLSj5pU='
+
+  [mod.'google.golang.org/grpc']
+    version = 'v1.81.1'
+    hash = 'sha256-YZ5KMHmN1HvsMxyIBIl3SmFmL3r+6bwjzzFLxUFhm1o='
+
+  [mod.'google.golang.org/protobuf']
+    version = 'v1.36.11'
+    hash = 'sha256-7W+6jntfI/awWL3JP6yQedxqP5S9o3XvPgJ2XxxsIeE='
