@@ -38,7 +38,7 @@ func (Server) Run(ctx context.Context, req *cmdv1alpha1.RunRequest) (*cmdv1alpha
 	return res.Build(), nil
 }
 
-func (Server) Exec(req *cmdv1alpha1.ExecRequest, stream grpc.ServerStreamingServer[cmdv1alpha1.ExecResponse]) error {
+func (Server) Exec(req *cmdv1alpha1.ExecRequest, srv grpc.ServerStreamingServer[cmdv1alpha1.ExecResponse]) error {
 	panic("unimplemented")
 }
 

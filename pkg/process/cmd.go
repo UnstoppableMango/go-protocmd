@@ -15,18 +15,21 @@ func CommandContext(ctx context.Context, proc *cmdv1alpha1.Process) (*exec.Cmd, 
 	}
 
 	cmd := exec.CommandContext(ctx, proc.GetPath())
-	cmd.Args = proc.GetArgs()
+	Apply(cmd, proc)
+	return cmd, nil
+}
 
+func Apply(cmd *exec.Cmd, proc *cmdv1alpha1.Process) {
+	cmd.Args = proc.GetArgs()
 	if proc.HasCwd() {
 		cmd.Dir = proc.GetCwd()
 	}
 	if proc.HasStdio() {
-		applyStdio(cmd, proc.GetStdio())
+		ApplyStdio(cmd, proc.GetStdio())
 	}
-	return cmd, nil
 }
 
-func applyStdio(cmd *exec.Cmd, stdio *cmdv1alpha1.Stdio) error {
+func ApplyStdio(cmd *exec.Cmd, stdio *cmdv1alpha1.Stdio) error {
 	var err error
 	if stdio.HasStdout() {
 		if cmd.Stdout, err = stream.ToWriter(stdio.GetStdout()); err != nil {
