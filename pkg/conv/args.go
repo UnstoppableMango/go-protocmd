@@ -5,7 +5,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-func ProtoArgs(msg protoreflect.Message) ([]string, error) {
+func Args(msg protoreflect.Message) ([]string, error) {
 	b := builder.New()
 	for fd, v := range msg.Range {
 		protoField(b, fd, v)
@@ -14,12 +14,19 @@ func ProtoArgs(msg protoreflect.Message) ([]string, error) {
 }
 
 func protoField(b Builder, fd protoreflect.FieldDescriptor, v protoreflect.Value) {
+	name := fd.TextName()
 	switch fd.Kind() {
 	case protoreflect.BoolKind:
-		boolOpt(b, fd.TextName(), v)
+		boolOpt(b, name, v)
+	case protoreflect.StringKind:
+		stringArg(b, name, v)
 	}
 }
 
 func boolOpt(b Builder, name string, v protoreflect.Value) {
 	Opt(b, name, v.IsValid, v.Bool)
+}
+
+func stringArg(b Builder, name string, v protoreflect.Value) {
+	Arg(b, name, v.IsValid, v.String)
 }

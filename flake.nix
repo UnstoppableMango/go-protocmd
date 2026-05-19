@@ -29,7 +29,7 @@
       imports = with inputs; [ treefmt-nix.flakeModule ];
 
       perSystem =
-        { pkgs, system, ... }:
+        { self', pkgs, system, ... }:
         let
           version = "0.0.1";
         in
@@ -40,6 +40,12 @@
           };
 
           packages.default = pkgs.callPackage ./nix { inherit version; };
+
+          apps.protocmd = {
+            type = "app";
+            program = "${self'.packages.default}/bin/protocmd";
+            meta.description = "Implementation of dev.unmango.cmd";
+          };
 
           devShells.default = pkgs.mkShellNoCC {
             packages = with pkgs; [

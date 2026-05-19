@@ -27,7 +27,7 @@ func AppendMap(b Builder, option string, values map[string]string) {
 	}
 }
 
-func Arg(b Builder, name string, pred func() bool, value func() any) {
+func Arg[T any](b Builder, name string, pred func() bool, value func() T) {
 	AppendIf(b, pred(), name, value())
 }
 
