@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	cmdv1alpha1 "github.com/unstoppablemango/go-protocmd/gen/dev/unmango/cmd/v1alpha1"
 	"github.com/unstoppablemango/go-protocmd/pkg/process"
@@ -40,7 +41,20 @@ func (Server) Exec(req *cmdv1alpha1.ExecRequest, srv grpc.ServerStreamingServer[
 }
 
 func (Server) Start(ctx context.Context, req *cmdv1alpha1.StartRequest) (*cmdv1alpha1.StartResponse, error) {
-	panic("unimplemented")
+	if !req.HasProcess() {
+		return nil, fmt.Errorf("process is required")
+	}
+
+	cmd := process.CommandContext(ctx, req.GetProcess())
+	if err := cmd.Start(); err != nil {
+		return nil, err
+	}
+
+	// TODO: Should we persist some local state of all the spawned processes?
+	res := &cmdv1alpha1.StartResponse_builder{
+		Id: new(strconv.Itoa(cmd.Process.Pid)),
+	}
+	return res.Build(), nil
 }
 
 func (Server) Wait(ctx context.Context, req *cmdv1alpha1.WaitRequest) (*cmdv1alpha1.WaitResponse, error) {
