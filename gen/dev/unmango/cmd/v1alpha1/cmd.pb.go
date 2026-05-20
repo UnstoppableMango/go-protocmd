@@ -10,6 +10,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
+	durationpb "google.golang.org/protobuf/types/known/durationpb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -259,10 +260,13 @@ func (b0 ArgsResponse_builder) Build() *ArgsResponse {
 }
 
 type RunRequest struct {
-	state              protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Process *Process               `protobuf:"bytes,1,opt,name=process"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state                  protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Process     *Process               `protobuf:"bytes,1,opt,name=process"`
+	xxx_hidden_Stdin       []byte                 `protobuf:"bytes,2,opt,name=stdin"`
+	XXX_raceDetectHookData protoimpl.RaceDetectHookData
+	XXX_presence           [1]uint32
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *RunRequest) Reset() {
@@ -297,8 +301,23 @@ func (x *RunRequest) GetProcess() *Process {
 	return nil
 }
 
+func (x *RunRequest) GetStdin() []byte {
+	if x != nil {
+		return x.xxx_hidden_Stdin
+	}
+	return nil
+}
+
 func (x *RunRequest) SetProcess(v *Process) {
 	x.xxx_hidden_Process = v
+}
+
+func (x *RunRequest) SetStdin(v []byte) {
+	if v == nil {
+		v = []byte{}
+	}
+	x.xxx_hidden_Stdin = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 2)
 }
 
 func (x *RunRequest) HasProcess() bool {
@@ -308,14 +327,27 @@ func (x *RunRequest) HasProcess() bool {
 	return x.xxx_hidden_Process != nil
 }
 
+func (x *RunRequest) HasStdin() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
+}
+
 func (x *RunRequest) ClearProcess() {
 	x.xxx_hidden_Process = nil
+}
+
+func (x *RunRequest) ClearStdin() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
+	x.xxx_hidden_Stdin = nil
 }
 
 type RunRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Process *Process
+	Stdin   []byte
 }
 
 func (b0 RunRequest_builder) Build() *RunRequest {
@@ -323,6 +355,10 @@ func (b0 RunRequest_builder) Build() *RunRequest {
 	b, x := &b0, m0
 	_, _ = b, x
 	x.xxx_hidden_Process = b.Process
+	if b.Stdin != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 2)
+		x.xxx_hidden_Stdin = b.Stdin
+	}
 	return m0
 }
 
@@ -331,6 +367,7 @@ type RunResponse struct {
 	xxx_hidden_Stdout      []byte                 `protobuf:"bytes,1,opt,name=stdout"`
 	xxx_hidden_Stderr      []byte                 `protobuf:"bytes,2,opt,name=stderr"`
 	xxx_hidden_ExitCode    int32                  `protobuf:"varint,3,opt,name=exit_code,json=exitCode"`
+	xxx_hidden_Exit        *ExitResult            `protobuf:"bytes,4,opt,name=exit"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -383,12 +420,19 @@ func (x *RunResponse) GetExitCode() int32 {
 	return 0
 }
 
+func (x *RunResponse) GetExit() *ExitResult {
+	if x != nil {
+		return x.xxx_hidden_Exit
+	}
+	return nil
+}
+
 func (x *RunResponse) SetStdout(v []byte) {
 	if v == nil {
 		v = []byte{}
 	}
 	x.xxx_hidden_Stdout = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 4)
 }
 
 func (x *RunResponse) SetStderr(v []byte) {
@@ -396,12 +440,16 @@ func (x *RunResponse) SetStderr(v []byte) {
 		v = []byte{}
 	}
 	x.xxx_hidden_Stderr = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 4)
 }
 
 func (x *RunResponse) SetExitCode(v int32) {
 	x.xxx_hidden_ExitCode = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 3)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
+}
+
+func (x *RunResponse) SetExit(v *ExitResult) {
+	x.xxx_hidden_Exit = v
 }
 
 func (x *RunResponse) HasStdout() bool {
@@ -425,6 +473,13 @@ func (x *RunResponse) HasExitCode() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
 }
 
+func (x *RunResponse) HasExit() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Exit != nil
+}
+
 func (x *RunResponse) ClearStdout() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
 	x.xxx_hidden_Stdout = nil
@@ -440,12 +495,17 @@ func (x *RunResponse) ClearExitCode() {
 	x.xxx_hidden_ExitCode = 0
 }
 
+func (x *RunResponse) ClearExit() {
+	x.xxx_hidden_Exit = nil
+}
+
 type RunResponse_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Stdout   []byte
 	Stderr   []byte
 	ExitCode *int32
+	Exit     *ExitResult
 }
 
 func (b0 RunResponse_builder) Build() *RunResponse {
@@ -453,25 +513,29 @@ func (b0 RunResponse_builder) Build() *RunResponse {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Stdout != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 4)
 		x.xxx_hidden_Stdout = b.Stdout
 	}
 	if b.Stderr != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 4)
 		x.xxx_hidden_Stderr = b.Stderr
 	}
 	if b.ExitCode != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 3)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
 		x.xxx_hidden_ExitCode = *b.ExitCode
 	}
+	x.xxx_hidden_Exit = b.Exit
 	return m0
 }
 
 type ExecRequest struct {
-	state              protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Process *Process               `protobuf:"bytes,1,opt,name=process"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state                  protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Process     *Process               `protobuf:"bytes,1,opt,name=process"`
+	xxx_hidden_Stdin       []byte                 `protobuf:"bytes,2,opt,name=stdin"`
+	XXX_raceDetectHookData protoimpl.RaceDetectHookData
+	XXX_presence           [1]uint32
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
 }
 
 func (x *ExecRequest) Reset() {
@@ -506,8 +570,23 @@ func (x *ExecRequest) GetProcess() *Process {
 	return nil
 }
 
+func (x *ExecRequest) GetStdin() []byte {
+	if x != nil {
+		return x.xxx_hidden_Stdin
+	}
+	return nil
+}
+
 func (x *ExecRequest) SetProcess(v *Process) {
 	x.xxx_hidden_Process = v
+}
+
+func (x *ExecRequest) SetStdin(v []byte) {
+	if v == nil {
+		v = []byte{}
+	}
+	x.xxx_hidden_Stdin = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 2)
 }
 
 func (x *ExecRequest) HasProcess() bool {
@@ -517,14 +596,27 @@ func (x *ExecRequest) HasProcess() bool {
 	return x.xxx_hidden_Process != nil
 }
 
+func (x *ExecRequest) HasStdin() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
+}
+
 func (x *ExecRequest) ClearProcess() {
 	x.xxx_hidden_Process = nil
+}
+
+func (x *ExecRequest) ClearStdin() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
+	x.xxx_hidden_Stdin = nil
 }
 
 type ExecRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Process *Process
+	Stdin   []byte
 }
 
 func (b0 ExecRequest_builder) Build() *ExecRequest {
@@ -532,6 +624,10 @@ func (b0 ExecRequest_builder) Build() *ExecRequest {
 	b, x := &b0, m0
 	_, _ = b, x
 	x.xxx_hidden_Process = b.Process
+	if b.Stdin != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 2)
+		x.xxx_hidden_Stdin = b.Stdin
+	}
 	return m0
 }
 
@@ -972,6 +1068,7 @@ func (b0 StartResponse_builder) Build() *StartResponse {
 type WaitRequest struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Id          *string                `protobuf:"bytes,1,opt,name=id"`
+	xxx_hidden_Timeout     *durationpb.Duration   `protobuf:"bytes,2,opt,name=timeout"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -1013,9 +1110,20 @@ func (x *WaitRequest) GetId() string {
 	return ""
 }
 
+func (x *WaitRequest) GetTimeout() *durationpb.Duration {
+	if x != nil {
+		return x.xxx_hidden_Timeout
+	}
+	return nil
+}
+
 func (x *WaitRequest) SetId(v string) {
 	x.xxx_hidden_Id = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 2)
+}
+
+func (x *WaitRequest) SetTimeout(v *durationpb.Duration) {
+	x.xxx_hidden_Timeout = v
 }
 
 func (x *WaitRequest) HasId() bool {
@@ -1025,15 +1133,27 @@ func (x *WaitRequest) HasId() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
 }
 
+func (x *WaitRequest) HasTimeout() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Timeout != nil
+}
+
 func (x *WaitRequest) ClearId() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
 	x.xxx_hidden_Id = nil
 }
 
+func (x *WaitRequest) ClearTimeout() {
+	x.xxx_hidden_Timeout = nil
+}
+
 type WaitRequest_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Id *string
+	Id      *string
+	Timeout *durationpb.Duration
 }
 
 func (b0 WaitRequest_builder) Build() *WaitRequest {
@@ -1041,15 +1161,17 @@ func (b0 WaitRequest_builder) Build() *WaitRequest {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Id != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 2)
 		x.xxx_hidden_Id = b.Id
 	}
+	x.xxx_hidden_Timeout = b.Timeout
 	return m0
 }
 
 type WaitResponse struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_ExitCode    int32                  `protobuf:"varint,1,opt,name=exit_code,json=exitCode"`
+	xxx_hidden_Exit        *ExitResult            `protobuf:"bytes,2,opt,name=exit"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -1088,9 +1210,20 @@ func (x *WaitResponse) GetExitCode() int32 {
 	return 0
 }
 
+func (x *WaitResponse) GetExit() *ExitResult {
+	if x != nil {
+		return x.xxx_hidden_Exit
+	}
+	return nil
+}
+
 func (x *WaitResponse) SetExitCode(v int32) {
 	x.xxx_hidden_ExitCode = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 2)
+}
+
+func (x *WaitResponse) SetExit(v *ExitResult) {
+	x.xxx_hidden_Exit = v
 }
 
 func (x *WaitResponse) HasExitCode() bool {
@@ -1100,15 +1233,27 @@ func (x *WaitResponse) HasExitCode() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
 }
 
+func (x *WaitResponse) HasExit() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Exit != nil
+}
+
 func (x *WaitResponse) ClearExitCode() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
 	x.xxx_hidden_ExitCode = 0
+}
+
+func (x *WaitResponse) ClearExit() {
+	x.xxx_hidden_Exit = nil
 }
 
 type WaitResponse_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	ExitCode *int32
+	Exit     *ExitResult
 }
 
 func (b0 WaitResponse_builder) Build() *WaitResponse {
@@ -1116,9 +1261,10 @@ func (b0 WaitResponse_builder) Build() *WaitResponse {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.ExitCode != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 2)
 		x.xxx_hidden_ExitCode = *b.ExitCode
 	}
+	x.xxx_hidden_Exit = b.Exit
 	return m0
 }
 
@@ -1284,6 +1430,7 @@ type Process struct {
 	xxx_hidden_Stdio       *Stdio                 `protobuf:"bytes,5,opt,name=stdio"`
 	xxx_hidden_User        *User                  `protobuf:"bytes,6,opt,name=user"`
 	xxx_hidden_Terminal    bool                   `protobuf:"varint,7,opt,name=terminal"`
+	xxx_hidden_Pty         *Terminal              `protobuf:"bytes,8,opt,name=pty"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -1370,9 +1517,16 @@ func (x *Process) GetTerminal() bool {
 	return false
 }
 
+func (x *Process) GetPty() *Terminal {
+	if x != nil {
+		return x.xxx_hidden_Pty
+	}
+	return nil
+}
+
 func (x *Process) SetPath(v string) {
 	x.xxx_hidden_Path = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 7)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 8)
 }
 
 func (x *Process) SetArgs(v []string) {
@@ -1385,7 +1539,7 @@ func (x *Process) SetEnv(v []string) {
 
 func (x *Process) SetCwd(v string) {
 	x.xxx_hidden_Cwd = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 7)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 8)
 }
 
 func (x *Process) SetStdio(v *Stdio) {
@@ -1398,7 +1552,11 @@ func (x *Process) SetUser(v *User) {
 
 func (x *Process) SetTerminal(v bool) {
 	x.xxx_hidden_Terminal = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 6, 7)
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 6, 8)
+}
+
+func (x *Process) SetPty(v *Terminal) {
+	x.xxx_hidden_Pty = v
 }
 
 func (x *Process) HasPath() bool {
@@ -1436,6 +1594,13 @@ func (x *Process) HasTerminal() bool {
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 6)
 }
 
+func (x *Process) HasPty() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Pty != nil
+}
+
 func (x *Process) ClearPath() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
 	x.xxx_hidden_Path = nil
@@ -1459,6 +1624,10 @@ func (x *Process) ClearTerminal() {
 	x.xxx_hidden_Terminal = false
 }
 
+func (x *Process) ClearPty() {
+	x.xxx_hidden_Pty = nil
+}
+
 type Process_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
@@ -1469,6 +1638,7 @@ type Process_builder struct {
 	Stdio    *Stdio
 	User     *User
 	Terminal *bool
+	Pty      *Terminal
 }
 
 func (b0 Process_builder) Build() *Process {
@@ -1476,20 +1646,126 @@ func (b0 Process_builder) Build() *Process {
 	b, x := &b0, m0
 	_, _ = b, x
 	if b.Path != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 7)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 8)
 		x.xxx_hidden_Path = b.Path
 	}
 	x.xxx_hidden_Args = b.Args
 	x.xxx_hidden_Env = b.Env
 	if b.Cwd != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 7)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 8)
 		x.xxx_hidden_Cwd = b.Cwd
 	}
 	x.xxx_hidden_Stdio = b.Stdio
 	x.xxx_hidden_User = b.User
 	if b.Terminal != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 6, 7)
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 6, 8)
 		x.xxx_hidden_Terminal = *b.Terminal
+	}
+	x.xxx_hidden_Pty = b.Pty
+	return m0
+}
+
+type Terminal struct {
+	state                  protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Rows        uint32                 `protobuf:"varint,1,opt,name=rows"`
+	xxx_hidden_Cols        uint32                 `protobuf:"varint,2,opt,name=cols"`
+	XXX_raceDetectHookData protoimpl.RaceDetectHookData
+	XXX_presence           [1]uint32
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *Terminal) Reset() {
+	*x = Terminal{}
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Terminal) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Terminal) ProtoMessage() {}
+
+func (x *Terminal) ProtoReflect() protoreflect.Message {
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *Terminal) GetRows() uint32 {
+	if x != nil {
+		return x.xxx_hidden_Rows
+	}
+	return 0
+}
+
+func (x *Terminal) GetCols() uint32 {
+	if x != nil {
+		return x.xxx_hidden_Cols
+	}
+	return 0
+}
+
+func (x *Terminal) SetRows(v uint32) {
+	x.xxx_hidden_Rows = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 2)
+}
+
+func (x *Terminal) SetCols(v uint32) {
+	x.xxx_hidden_Cols = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 2)
+}
+
+func (x *Terminal) HasRows() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
+}
+
+func (x *Terminal) HasCols() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
+}
+
+func (x *Terminal) ClearRows() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
+	x.xxx_hidden_Rows = 0
+}
+
+func (x *Terminal) ClearCols() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
+	x.xxx_hidden_Cols = 0
+}
+
+type Terminal_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Rows *uint32
+	Cols *uint32
+}
+
+func (b0 Terminal_builder) Build() *Terminal {
+	m0 := &Terminal{}
+	b, x := &b0, m0
+	_, _ = b, x
+	if b.Rows != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 2)
+		x.xxx_hidden_Rows = *b.Rows
+	}
+	if b.Cols != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 2)
+		x.xxx_hidden_Cols = *b.Cols
 	}
 	return m0
 }
@@ -1505,7 +1781,7 @@ type Stdio struct {
 
 func (x *Stdio) Reset() {
 	*x = Stdio{}
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[14]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1517,7 +1793,7 @@ func (x *Stdio) String() string {
 func (*Stdio) ProtoMessage() {}
 
 func (x *Stdio) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[14]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1621,7 +1897,7 @@ type Stream struct {
 
 func (x *Stream) Reset() {
 	*x = Stream{}
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[15]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1633,7 +1909,7 @@ func (x *Stream) String() string {
 func (*Stream) ProtoMessage() {}
 
 func (x *Stream) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[15]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1836,7 +2112,7 @@ func (b0 Stream_builder) Build() *Stream {
 type case_Stream_Kind protoreflect.FieldNumber
 
 func (x case_Stream_Kind) String() string {
-	md := file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[15].Descriptor()
+	md := file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[16].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -1879,7 +2155,7 @@ type Inherit struct {
 
 func (x *Inherit) Reset() {
 	*x = Inherit{}
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[16]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1891,7 +2167,7 @@ func (x *Inherit) String() string {
 func (*Inherit) ProtoMessage() {}
 
 func (x *Inherit) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[16]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1922,7 +2198,7 @@ type Null struct {
 
 func (x *Null) Reset() {
 	*x = Null{}
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[17]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1934,7 +2210,7 @@ func (x *Null) String() string {
 func (*Null) ProtoMessage() {}
 
 func (x *Null) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[17]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1965,7 +2241,7 @@ type Pipe struct {
 
 func (x *Pipe) Reset() {
 	*x = Pipe{}
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[18]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1977,7 +2253,7 @@ func (x *Pipe) String() string {
 func (*Pipe) ProtoMessage() {}
 
 func (x *Pipe) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[18]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2012,7 +2288,7 @@ type File struct {
 
 func (x *File) Reset() {
 	*x = File{}
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[19]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2024,7 +2300,7 @@ func (x *File) String() string {
 func (*File) ProtoMessage() {}
 
 func (x *File) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[19]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2124,7 +2400,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[20]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2136,7 +2412,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[20]
+	mi := &file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2266,20 +2542,23 @@ var File_dev_unmango_cmd_v1alpha1_cmd_proto protoreflect.FileDescriptor
 
 const file_dev_unmango_cmd_v1alpha1_cmd_proto_rawDesc = "" +
 	"\n" +
-	"\"dev/unmango/cmd/v1alpha1/cmd.proto\x12\x18dev.unmango.cmd.v1alpha1\x1a\x19google/protobuf/any.proto\"7\n" +
+	"\"dev/unmango/cmd/v1alpha1/cmd.proto\x12\x18dev.unmango.cmd.v1alpha1\x1a\x19google/protobuf/any.proto\x1a\x1egoogle/protobuf/duration.proto\"7\n" +
 	"\vArgsRequest\x12(\n" +
 	"\x04spec\x18\x01 \x01(\v2\x14.google.protobuf.AnyR\x04spec\"\"\n" +
 	"\fArgsResponse\x12\x12\n" +
-	"\x04args\x18\x01 \x03(\tR\x04args\"I\n" +
+	"\x04args\x18\x01 \x03(\tR\x04args\"_\n" +
 	"\n" +
 	"RunRequest\x12;\n" +
-	"\aprocess\x18\x01 \x01(\v2!.dev.unmango.cmd.v1alpha1.ProcessR\aprocess\"Z\n" +
+	"\aprocess\x18\x01 \x01(\v2!.dev.unmango.cmd.v1alpha1.ProcessR\aprocess\x12\x14\n" +
+	"\x05stdin\x18\x02 \x01(\fR\x05stdin\"\x94\x01\n" +
 	"\vRunResponse\x12\x16\n" +
 	"\x06stdout\x18\x01 \x01(\fR\x06stdout\x12\x16\n" +
 	"\x06stderr\x18\x02 \x01(\fR\x06stderr\x12\x1b\n" +
-	"\texit_code\x18\x03 \x01(\x05R\bexitCode\"J\n" +
+	"\texit_code\x18\x03 \x01(\x05R\bexitCode\x128\n" +
+	"\x04exit\x18\x04 \x01(\v2$.dev.unmango.cmd.v1alpha1.ExitResultR\x04exit\"`\n" +
 	"\vExecRequest\x12;\n" +
-	"\aprocess\x18\x01 \x01(\v2!.dev.unmango.cmd.v1alpha1.ProcessR\aprocess\"\x89\x01\n" +
+	"\aprocess\x18\x01 \x01(\v2!.dev.unmango.cmd.v1alpha1.ProcessR\aprocess\x12\x14\n" +
+	"\x05stdin\x18\x02 \x01(\fR\x05stdin\"\x89\x01\n" +
 	"\fExecResponse\x12\x18\n" +
 	"\x06stdout\x18\x01 \x01(\fH\x00R\x06stdout\x12\x18\n" +
 	"\x06stderr\x18\x02 \x01(\fH\x00R\x06stderr\x12:\n" +
@@ -2291,15 +2570,17 @@ const file_dev_unmango_cmd_v1alpha1_cmd_proto_rawDesc = "" +
 	"\fStartRequest\x12;\n" +
 	"\aprocess\x18\x01 \x01(\v2!.dev.unmango.cmd.v1alpha1.ProcessR\aprocess\"\x1f\n" +
 	"\rStartResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\x1d\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"R\n" +
 	"\vWaitRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"+\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x123\n" +
+	"\atimeout\x18\x02 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"e\n" +
 	"\fWaitResponse\x12\x1b\n" +
-	"\texit_code\x18\x01 \x01(\x05R\bexitCode\"Y\n" +
+	"\texit_code\x18\x01 \x01(\x05R\bexitCode\x128\n" +
+	"\x04exit\x18\x02 \x01(\v2$.dev.unmango.cmd.v1alpha1.ExitResultR\x04exit\"Y\n" +
 	"\rSignalRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x128\n" +
 	"\x06signal\x18\x02 \x01(\x0e2 .dev.unmango.cmd.v1alpha1.SignalR\x06signal\"\x10\n" +
-	"\x0eSignalResponse\"\xdc\x01\n" +
+	"\x0eSignalResponse\"\x92\x02\n" +
 	"\aProcess\x12\x12\n" +
 	"\x04path\x18\x01 \x01(\tR\x04path\x12\x12\n" +
 	"\x04args\x18\x02 \x03(\tR\x04args\x12\x10\n" +
@@ -2307,7 +2588,11 @@ const file_dev_unmango_cmd_v1alpha1_cmd_proto_rawDesc = "" +
 	"\x03cwd\x18\x04 \x01(\tR\x03cwd\x125\n" +
 	"\x05stdio\x18\x05 \x01(\v2\x1f.dev.unmango.cmd.v1alpha1.StdioR\x05stdio\x122\n" +
 	"\x04user\x18\x06 \x01(\v2\x1e.dev.unmango.cmd.v1alpha1.UserR\x04user\x12\x1a\n" +
-	"\bterminal\x18\a \x01(\bR\bterminal\"\xb3\x01\n" +
+	"\bterminal\x18\a \x01(\bR\bterminal\x124\n" +
+	"\x03pty\x18\b \x01(\v2\".dev.unmango.cmd.v1alpha1.TerminalR\x03pty\"2\n" +
+	"\bTerminal\x12\x12\n" +
+	"\x04rows\x18\x01 \x01(\rR\x04rows\x12\x12\n" +
+	"\x04cols\x18\x02 \x01(\rR\x04cols\"\xb3\x01\n" +
 	"\x05Stdio\x126\n" +
 	"\x05stdin\x18\x01 \x01(\v2 .dev.unmango.cmd.v1alpha1.StreamR\x05stdin\x128\n" +
 	"\x06stdout\x18\x02 \x01(\v2 .dev.unmango.cmd.v1alpha1.StreamR\x06stdout\x128\n" +
@@ -2358,67 +2643,73 @@ const file_dev_unmango_cmd_v1alpha1_cmd_proto_rawDesc = "" +
 	"\x1ccom.dev.unmango.cmd.v1alpha1B\bCmdProtoP\x01ZPgithub.com/unstoppablemango/go-protocmd/gen/dev/unmango/cmd/v1alpha1;cmdv1alpha1\xa2\x02\x03DUC\xaa\x02\x18Dev.Unmango.Cmd.V1alpha1\xca\x02\x18Dev\\Unmango\\Cmd\\V1alpha1\xe2\x02$Dev\\Unmango\\Cmd\\V1alpha1\\GPBMetadata\xea\x02\x1bDev::Unmango::Cmd::V1alpha1b\beditionsp\xe9\a"
 
 var file_dev_unmango_cmd_v1alpha1_cmd_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_dev_unmango_cmd_v1alpha1_cmd_proto_goTypes = []any{
-	(OpenMode)(0),          // 0: dev.unmango.cmd.v1alpha1.OpenMode
-	(Signal)(0),            // 1: dev.unmango.cmd.v1alpha1.Signal
-	(*ArgsRequest)(nil),    // 2: dev.unmango.cmd.v1alpha1.ArgsRequest
-	(*ArgsResponse)(nil),   // 3: dev.unmango.cmd.v1alpha1.ArgsResponse
-	(*RunRequest)(nil),     // 4: dev.unmango.cmd.v1alpha1.RunRequest
-	(*RunResponse)(nil),    // 5: dev.unmango.cmd.v1alpha1.RunResponse
-	(*ExecRequest)(nil),    // 6: dev.unmango.cmd.v1alpha1.ExecRequest
-	(*ExecResponse)(nil),   // 7: dev.unmango.cmd.v1alpha1.ExecResponse
-	(*ExitResult)(nil),     // 8: dev.unmango.cmd.v1alpha1.ExitResult
-	(*StartRequest)(nil),   // 9: dev.unmango.cmd.v1alpha1.StartRequest
-	(*StartResponse)(nil),  // 10: dev.unmango.cmd.v1alpha1.StartResponse
-	(*WaitRequest)(nil),    // 11: dev.unmango.cmd.v1alpha1.WaitRequest
-	(*WaitResponse)(nil),   // 12: dev.unmango.cmd.v1alpha1.WaitResponse
-	(*SignalRequest)(nil),  // 13: dev.unmango.cmd.v1alpha1.SignalRequest
-	(*SignalResponse)(nil), // 14: dev.unmango.cmd.v1alpha1.SignalResponse
-	(*Process)(nil),        // 15: dev.unmango.cmd.v1alpha1.Process
-	(*Stdio)(nil),          // 16: dev.unmango.cmd.v1alpha1.Stdio
-	(*Stream)(nil),         // 17: dev.unmango.cmd.v1alpha1.Stream
-	(*Inherit)(nil),        // 18: dev.unmango.cmd.v1alpha1.Inherit
-	(*Null)(nil),           // 19: dev.unmango.cmd.v1alpha1.Null
-	(*Pipe)(nil),           // 20: dev.unmango.cmd.v1alpha1.Pipe
-	(*File)(nil),           // 21: dev.unmango.cmd.v1alpha1.File
-	(*User)(nil),           // 22: dev.unmango.cmd.v1alpha1.User
-	(*anypb.Any)(nil),      // 23: google.protobuf.Any
+	(OpenMode)(0),               // 0: dev.unmango.cmd.v1alpha1.OpenMode
+	(Signal)(0),                 // 1: dev.unmango.cmd.v1alpha1.Signal
+	(*ArgsRequest)(nil),         // 2: dev.unmango.cmd.v1alpha1.ArgsRequest
+	(*ArgsResponse)(nil),        // 3: dev.unmango.cmd.v1alpha1.ArgsResponse
+	(*RunRequest)(nil),          // 4: dev.unmango.cmd.v1alpha1.RunRequest
+	(*RunResponse)(nil),         // 5: dev.unmango.cmd.v1alpha1.RunResponse
+	(*ExecRequest)(nil),         // 6: dev.unmango.cmd.v1alpha1.ExecRequest
+	(*ExecResponse)(nil),        // 7: dev.unmango.cmd.v1alpha1.ExecResponse
+	(*ExitResult)(nil),          // 8: dev.unmango.cmd.v1alpha1.ExitResult
+	(*StartRequest)(nil),        // 9: dev.unmango.cmd.v1alpha1.StartRequest
+	(*StartResponse)(nil),       // 10: dev.unmango.cmd.v1alpha1.StartResponse
+	(*WaitRequest)(nil),         // 11: dev.unmango.cmd.v1alpha1.WaitRequest
+	(*WaitResponse)(nil),        // 12: dev.unmango.cmd.v1alpha1.WaitResponse
+	(*SignalRequest)(nil),       // 13: dev.unmango.cmd.v1alpha1.SignalRequest
+	(*SignalResponse)(nil),      // 14: dev.unmango.cmd.v1alpha1.SignalResponse
+	(*Process)(nil),             // 15: dev.unmango.cmd.v1alpha1.Process
+	(*Terminal)(nil),            // 16: dev.unmango.cmd.v1alpha1.Terminal
+	(*Stdio)(nil),               // 17: dev.unmango.cmd.v1alpha1.Stdio
+	(*Stream)(nil),              // 18: dev.unmango.cmd.v1alpha1.Stream
+	(*Inherit)(nil),             // 19: dev.unmango.cmd.v1alpha1.Inherit
+	(*Null)(nil),                // 20: dev.unmango.cmd.v1alpha1.Null
+	(*Pipe)(nil),                // 21: dev.unmango.cmd.v1alpha1.Pipe
+	(*File)(nil),                // 22: dev.unmango.cmd.v1alpha1.File
+	(*User)(nil),                // 23: dev.unmango.cmd.v1alpha1.User
+	(*anypb.Any)(nil),           // 24: google.protobuf.Any
+	(*durationpb.Duration)(nil), // 25: google.protobuf.Duration
 }
 var file_dev_unmango_cmd_v1alpha1_cmd_proto_depIdxs = []int32{
-	23, // 0: dev.unmango.cmd.v1alpha1.ArgsRequest.spec:type_name -> google.protobuf.Any
+	24, // 0: dev.unmango.cmd.v1alpha1.ArgsRequest.spec:type_name -> google.protobuf.Any
 	15, // 1: dev.unmango.cmd.v1alpha1.RunRequest.process:type_name -> dev.unmango.cmd.v1alpha1.Process
-	15, // 2: dev.unmango.cmd.v1alpha1.ExecRequest.process:type_name -> dev.unmango.cmd.v1alpha1.Process
-	8,  // 3: dev.unmango.cmd.v1alpha1.ExecResponse.exit:type_name -> dev.unmango.cmd.v1alpha1.ExitResult
-	15, // 4: dev.unmango.cmd.v1alpha1.StartRequest.process:type_name -> dev.unmango.cmd.v1alpha1.Process
-	1,  // 5: dev.unmango.cmd.v1alpha1.SignalRequest.signal:type_name -> dev.unmango.cmd.v1alpha1.Signal
-	16, // 6: dev.unmango.cmd.v1alpha1.Process.stdio:type_name -> dev.unmango.cmd.v1alpha1.Stdio
-	22, // 7: dev.unmango.cmd.v1alpha1.Process.user:type_name -> dev.unmango.cmd.v1alpha1.User
-	17, // 8: dev.unmango.cmd.v1alpha1.Stdio.stdin:type_name -> dev.unmango.cmd.v1alpha1.Stream
-	17, // 9: dev.unmango.cmd.v1alpha1.Stdio.stdout:type_name -> dev.unmango.cmd.v1alpha1.Stream
-	17, // 10: dev.unmango.cmd.v1alpha1.Stdio.stderr:type_name -> dev.unmango.cmd.v1alpha1.Stream
-	18, // 11: dev.unmango.cmd.v1alpha1.Stream.inherit:type_name -> dev.unmango.cmd.v1alpha1.Inherit
-	19, // 12: dev.unmango.cmd.v1alpha1.Stream.null:type_name -> dev.unmango.cmd.v1alpha1.Null
-	20, // 13: dev.unmango.cmd.v1alpha1.Stream.pipe:type_name -> dev.unmango.cmd.v1alpha1.Pipe
-	21, // 14: dev.unmango.cmd.v1alpha1.Stream.file:type_name -> dev.unmango.cmd.v1alpha1.File
-	0,  // 15: dev.unmango.cmd.v1alpha1.File.mode:type_name -> dev.unmango.cmd.v1alpha1.OpenMode
-	2,  // 16: dev.unmango.cmd.v1alpha1.ConversionService.Args:input_type -> dev.unmango.cmd.v1alpha1.ArgsRequest
-	4,  // 17: dev.unmango.cmd.v1alpha1.CommandService.Run:input_type -> dev.unmango.cmd.v1alpha1.RunRequest
-	6,  // 18: dev.unmango.cmd.v1alpha1.CommandService.Exec:input_type -> dev.unmango.cmd.v1alpha1.ExecRequest
-	9,  // 19: dev.unmango.cmd.v1alpha1.CommandService.Start:input_type -> dev.unmango.cmd.v1alpha1.StartRequest
-	11, // 20: dev.unmango.cmd.v1alpha1.CommandService.Wait:input_type -> dev.unmango.cmd.v1alpha1.WaitRequest
-	13, // 21: dev.unmango.cmd.v1alpha1.CommandService.Signal:input_type -> dev.unmango.cmd.v1alpha1.SignalRequest
-	3,  // 22: dev.unmango.cmd.v1alpha1.ConversionService.Args:output_type -> dev.unmango.cmd.v1alpha1.ArgsResponse
-	5,  // 23: dev.unmango.cmd.v1alpha1.CommandService.Run:output_type -> dev.unmango.cmd.v1alpha1.RunResponse
-	7,  // 24: dev.unmango.cmd.v1alpha1.CommandService.Exec:output_type -> dev.unmango.cmd.v1alpha1.ExecResponse
-	10, // 25: dev.unmango.cmd.v1alpha1.CommandService.Start:output_type -> dev.unmango.cmd.v1alpha1.StartResponse
-	12, // 26: dev.unmango.cmd.v1alpha1.CommandService.Wait:output_type -> dev.unmango.cmd.v1alpha1.WaitResponse
-	14, // 27: dev.unmango.cmd.v1alpha1.CommandService.Signal:output_type -> dev.unmango.cmd.v1alpha1.SignalResponse
-	22, // [22:28] is the sub-list for method output_type
-	16, // [16:22] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	8,  // 2: dev.unmango.cmd.v1alpha1.RunResponse.exit:type_name -> dev.unmango.cmd.v1alpha1.ExitResult
+	15, // 3: dev.unmango.cmd.v1alpha1.ExecRequest.process:type_name -> dev.unmango.cmd.v1alpha1.Process
+	8,  // 4: dev.unmango.cmd.v1alpha1.ExecResponse.exit:type_name -> dev.unmango.cmd.v1alpha1.ExitResult
+	15, // 5: dev.unmango.cmd.v1alpha1.StartRequest.process:type_name -> dev.unmango.cmd.v1alpha1.Process
+	25, // 6: dev.unmango.cmd.v1alpha1.WaitRequest.timeout:type_name -> google.protobuf.Duration
+	8,  // 7: dev.unmango.cmd.v1alpha1.WaitResponse.exit:type_name -> dev.unmango.cmd.v1alpha1.ExitResult
+	1,  // 8: dev.unmango.cmd.v1alpha1.SignalRequest.signal:type_name -> dev.unmango.cmd.v1alpha1.Signal
+	17, // 9: dev.unmango.cmd.v1alpha1.Process.stdio:type_name -> dev.unmango.cmd.v1alpha1.Stdio
+	23, // 10: dev.unmango.cmd.v1alpha1.Process.user:type_name -> dev.unmango.cmd.v1alpha1.User
+	16, // 11: dev.unmango.cmd.v1alpha1.Process.pty:type_name -> dev.unmango.cmd.v1alpha1.Terminal
+	18, // 12: dev.unmango.cmd.v1alpha1.Stdio.stdin:type_name -> dev.unmango.cmd.v1alpha1.Stream
+	18, // 13: dev.unmango.cmd.v1alpha1.Stdio.stdout:type_name -> dev.unmango.cmd.v1alpha1.Stream
+	18, // 14: dev.unmango.cmd.v1alpha1.Stdio.stderr:type_name -> dev.unmango.cmd.v1alpha1.Stream
+	19, // 15: dev.unmango.cmd.v1alpha1.Stream.inherit:type_name -> dev.unmango.cmd.v1alpha1.Inherit
+	20, // 16: dev.unmango.cmd.v1alpha1.Stream.null:type_name -> dev.unmango.cmd.v1alpha1.Null
+	21, // 17: dev.unmango.cmd.v1alpha1.Stream.pipe:type_name -> dev.unmango.cmd.v1alpha1.Pipe
+	22, // 18: dev.unmango.cmd.v1alpha1.Stream.file:type_name -> dev.unmango.cmd.v1alpha1.File
+	0,  // 19: dev.unmango.cmd.v1alpha1.File.mode:type_name -> dev.unmango.cmd.v1alpha1.OpenMode
+	2,  // 20: dev.unmango.cmd.v1alpha1.ConversionService.Args:input_type -> dev.unmango.cmd.v1alpha1.ArgsRequest
+	4,  // 21: dev.unmango.cmd.v1alpha1.CommandService.Run:input_type -> dev.unmango.cmd.v1alpha1.RunRequest
+	6,  // 22: dev.unmango.cmd.v1alpha1.CommandService.Exec:input_type -> dev.unmango.cmd.v1alpha1.ExecRequest
+	9,  // 23: dev.unmango.cmd.v1alpha1.CommandService.Start:input_type -> dev.unmango.cmd.v1alpha1.StartRequest
+	11, // 24: dev.unmango.cmd.v1alpha1.CommandService.Wait:input_type -> dev.unmango.cmd.v1alpha1.WaitRequest
+	13, // 25: dev.unmango.cmd.v1alpha1.CommandService.Signal:input_type -> dev.unmango.cmd.v1alpha1.SignalRequest
+	3,  // 26: dev.unmango.cmd.v1alpha1.ConversionService.Args:output_type -> dev.unmango.cmd.v1alpha1.ArgsResponse
+	5,  // 27: dev.unmango.cmd.v1alpha1.CommandService.Run:output_type -> dev.unmango.cmd.v1alpha1.RunResponse
+	7,  // 28: dev.unmango.cmd.v1alpha1.CommandService.Exec:output_type -> dev.unmango.cmd.v1alpha1.ExecResponse
+	10, // 29: dev.unmango.cmd.v1alpha1.CommandService.Start:output_type -> dev.unmango.cmd.v1alpha1.StartResponse
+	12, // 30: dev.unmango.cmd.v1alpha1.CommandService.Wait:output_type -> dev.unmango.cmd.v1alpha1.WaitResponse
+	14, // 31: dev.unmango.cmd.v1alpha1.CommandService.Signal:output_type -> dev.unmango.cmd.v1alpha1.SignalResponse
+	26, // [26:32] is the sub-list for method output_type
+	20, // [20:26] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_dev_unmango_cmd_v1alpha1_cmd_proto_init() }
@@ -2431,7 +2722,7 @@ func file_dev_unmango_cmd_v1alpha1_cmd_proto_init() {
 		(*execResponse_Stderr)(nil),
 		(*execResponse_Exit)(nil),
 	}
-	file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[15].OneofWrappers = []any{
+	file_dev_unmango_cmd_v1alpha1_cmd_proto_msgTypes[16].OneofWrappers = []any{
 		(*stream_Inherit)(nil),
 		(*stream_Null)(nil),
 		(*stream_Pipe)(nil),
@@ -2443,7 +2734,7 @@ func file_dev_unmango_cmd_v1alpha1_cmd_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_dev_unmango_cmd_v1alpha1_cmd_proto_rawDesc), len(file_dev_unmango_cmd_v1alpha1_cmd_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   21,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

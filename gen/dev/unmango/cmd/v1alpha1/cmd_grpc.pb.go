@@ -26,6 +26,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConversionServiceClient interface {
+	// Args converts a typed spec to a command-line argument list.
+	// Pack the spec message using google.protobuf.Any before sending.
+	// Example (Go): anypb.New(&MySpec{...})
 	Args(ctx context.Context, in *ArgsRequest, opts ...grpc.CallOption) (*ArgsResponse, error)
 }
 
@@ -51,6 +54,9 @@ func (c *conversionServiceClient) Args(ctx context.Context, in *ArgsRequest, opt
 // All implementations must embed UnimplementedConversionServiceServer
 // for forward compatibility.
 type ConversionServiceServer interface {
+	// Args converts a typed spec to a command-line argument list.
+	// Pack the spec message using google.protobuf.Any before sending.
+	// Example (Go): anypb.New(&MySpec{...})
 	Args(context.Context, *ArgsRequest) (*ArgsResponse, error)
 	mustEmbedUnimplementedConversionServiceServer()
 }
