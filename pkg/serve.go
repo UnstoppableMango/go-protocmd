@@ -4,7 +4,7 @@ import (
 	"net"
 
 	"charm.land/log/v2"
-	cmdv1alpha1 "github.com/unstoppablemango/go-protocmd/gen/dev/unmango/cmd/v1alpha1"
+	cmdv1alpha2 "github.com/unstoppablemango/go-protocmd/gen/dev/unmango/cmd/v1alpha2"
 	convserver "github.com/unstoppablemango/go-protocmd/pkg/conv/server"
 	cmdserver "github.com/unstoppablemango/go-protocmd/pkg/process/server"
 	"google.golang.org/grpc"
@@ -17,8 +17,8 @@ func ListenAndServe() error {
 	}
 
 	srv := grpc.NewServer()
-	cmdv1alpha1.RegisterConversionServiceServer(srv, convserver.NewServer())
-	cmdv1alpha1.RegisterCommandServiceServer(srv, cmdserver.NewServer())
+	cmdv1alpha2.RegisterConversionServiceServer(srv, convserver.NewServer())
+	cmdv1alpha2.RegisterExecutionServiceServer(srv, cmdserver.NewServer())
 
 	log.Info("Listen and serving", "addr", lis.Addr())
 	if err := srv.Serve(lis); err != nil {
