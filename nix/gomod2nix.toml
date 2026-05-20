@@ -82,12 +82,12 @@ schema = 3
     hash = 'sha256-uEPpzwRJBJsQWBw6M71FDfgJuR7n55d/7IV8MO+rpwQ='
 
   [mod.'github.com/onsi/ginkgo/v2']
-    version = 'v2.28.3'
-    hash = 'sha256-HD+3cXtEz+3vWn/D5tBUa2nwwBjf/MxMrlBMxyGEGB8='
+    version = 'v2.29.0'
+    hash = 'sha256-MLTachXRpWLD9614nLSR8xHw3iC0dxphcJ3gm6F2Reg='
 
   [mod.'github.com/onsi/gomega']
-    version = 'v1.40.0'
-    hash = 'sha256-FbdhUXLOJrEmiUOJqkWr9TT0ci8pJQBhGtBmRCsvR7U='
+    version = 'v1.41.0'
+    hash = 'sha256-6jMNrk7lrDHbu4mE5TaIuzhnl8oIAWwURVjENujwl1M='
 
   [mod.'github.com/rivo/uniseg']
     version = 'v0.4.7'
@@ -102,8 +102,8 @@ schema = 3
     hash = 'sha256-YAjyYpq5BXCosVJtvYLWFG1t4gma2ylzc7ILLoj/hD8='
 
   [mod.'github.com/unmango/go']
-    version = 'v0.16.3'
-    hash = 'sha256-kmXa6gaPlfaiwmPH4hE8fFciqm/4w4aIuvrBOwJnLkI='
+    version = 'v0.16.5'
+    hash = 'sha256-SmhElF/fUxZBHUTdY6Nfuc5/5zLen/PD5aim6RiqVVI='
 
   [mod.'github.com/unstoppablemango/godec']
     version = 'v0.0.0-20260518055026-60e3301453c7'
