@@ -10,7 +10,7 @@ import (
 	cmdv1alpha1 "github.com/unstoppablemango/go-protocmd/gen/dev/unmango/cmd/v1alpha1"
 )
 
-func ToReader(stream *cmdv1alpha1.Stream, w world.IO) io.Reader {
+func ToReader(stream *cmdv1alpha1.Stream) io.Reader {
 	switch kind := stream.WhichKind(); kind {
 	case cmdv1alpha1.Stream_Null_case, cmdv1alpha1.Stream_Kind_not_set_case:
 		return strings.NewReader("") // Empty reader

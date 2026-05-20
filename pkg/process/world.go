@@ -51,7 +51,9 @@ func (w World) Command(proc *cmdv1alpha1.Process) (*exec.Cmd, error) {
 		cmd.Dir = proc.GetCwd()
 	}
 	if proc.HasStdio() {
-		applyStdio(cmd, proc.GetStdio())
+		if err := w.applyStdio(cmd, proc.GetStdio()); err != nil {
+			return nil, err
+		}
 	}
 	if proc.HasTerminal() {
 		// TODO
@@ -62,19 +64,28 @@ func (w World) Command(proc *cmdv1alpha1.Process) (*exec.Cmd, error) {
 	return cmd, nil
 }
 
-func (w World) applyStdio(cmd *exec.Cmd, stdio *cmdv1alpha1.Stdio) {
+func (w World) applyStdio(cmd *exec.Cmd, stdio *cmdv1alpha1.Stdio) error {
 	if stdio.HasStdout() {
-		cmd.Stdout = w.writer(stdio.GetStdout())
+		stdout, err := w.writer(stdio.GetStdout())
+		if err != nil {
+			return err
+		}
+		cmd.Stdout = stdout
 	}
 	if stdio.HasStderr() {
-		// cmd.Stderr = stream.ToWriter(stdio.GetStderr())
+		stderr, err := w.writer(stdio.GetStderr())
+		if err != nil {
+			return err
+		}
+		cmd.Stderr = stderr
 	}
 	if stdio.HasStdin() {
-		// cmd.Stdin = stream.ToReader(stdio.GetStdin())
+		// TODO
 	}
+	return nil
 }
 
-func (w World) writer(stream *cmdv1alpha1.Stream) io.Writer {
+func (w World) writer(stream *cmdv1alpha1.Stream) (io.Writer, error) {
 	switch kind := stream.WhichKind(); kind {
 	case cmdv1alpha1.Stream_Null_case, cmdv1alpha1.Stream_Kind_not_set_case:
 		return io.Discard, nil
