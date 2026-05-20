@@ -1,10 +1,9 @@
-package cmd
+package server
 
 import (
 	"bytes"
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -33,7 +32,7 @@ func NewServer() cmdv1alpha1.CommandServiceServer {
 
 func (s *Server) Run(ctx context.Context, req *cmdv1alpha1.RunRequest) (*cmdv1alpha1.RunResponse, error) {
 	if !req.HasProcess() {
-		return nil, fmt.Errorf("process is required")
+		return nil, invalid("process is required")
 	}
 
 	var stdout, stderr bytes.Buffer
@@ -49,16 +48,17 @@ func (s *Server) Run(ctx context.Context, req *cmdv1alpha1.RunRequest) (*cmdv1al
 	}
 
 	exitCode := int32(cmd.ProcessState.ExitCode())
-	return (&cmdv1alpha1.RunResponse_builder{
+	res := &cmdv1alpha1.RunResponse_builder{
 		Stdout:   stdout.Bytes(),
 		Stderr:   stderr.Bytes(),
 		ExitCode: &exitCode,
-	}).Build(), nil
+	}
+	return res.Build(), nil
 }
 
 func (s *Server) Exec(req *cmdv1alpha1.ExecRequest, srv grpc.ServerStreamingServer[cmdv1alpha1.ExecResponse]) error {
 	if !req.HasProcess() {
-		return status.Error(codes.InvalidArgument, "process is required")
+		return invalid("process is required")
 	}
 
 	cmd := process.CommandContext(srv.Context(), req.GetProcess())
@@ -103,10 +103,12 @@ func (s *Server) Exec(req *cmdv1alpha1.ExecRequest, srv grpc.ServerStreamingServ
 	}
 
 	pipe(stdout, func(b []byte) *cmdv1alpha1.ExecResponse {
-		return (&cmdv1alpha1.ExecResponse_builder{Stdout: b}).Build()
+		res := &cmdv1alpha1.ExecResponse_builder{Stdout: b}
+		return res.Build()
 	})
 	pipe(stderr, func(b []byte) *cmdv1alpha1.ExecResponse {
-		return (&cmdv1alpha1.ExecResponse_builder{Stderr: b}).Build()
+		res := &cmdv1alpha1.ExecResponse_builder{Stderr: b}
+		return res.Build()
 	})
 
 	wg.Wait()
@@ -119,13 +121,14 @@ func (s *Server) Exec(req *cmdv1alpha1.ExecRequest, srv grpc.ServerStreamingServ
 	}
 
 	exitCode := int32(cmd.ProcessState.ExitCode())
-	exit := (&cmdv1alpha1.ExitResult_builder{Code: &exitCode}).Build()
-	return srv.Send((&cmdv1alpha1.ExecResponse_builder{Exit: exit}).Build())
+	exit := &cmdv1alpha1.ExitResult_builder{Code: &exitCode}
+	res := &cmdv1alpha1.ExecResponse_builder{Exit: exit.Build()}
+	return srv.Send(res.Build())
 }
 
 func (s *Server) Start(ctx context.Context, req *cmdv1alpha1.StartRequest) (*cmdv1alpha1.StartResponse, error) {
 	if !req.HasProcess() {
-		return nil, fmt.Errorf("process is required")
+		return nil, invalid("process is required")
 	}
 
 	cmd := process.CommandContext(ctx, req.GetProcess())
@@ -139,12 +142,13 @@ func (s *Server) Start(ctx context.Context, req *cmdv1alpha1.StartRequest) (*cmd
 	s.procs[id] = cmd
 	s.mu.Unlock()
 
-	return (&cmdv1alpha1.StartResponse_builder{Id: &id}).Build(), nil
+	res := &cmdv1alpha1.StartResponse_builder{Id: &id}
+	return res.Build(), nil
 }
 
 func (s *Server) Wait(ctx context.Context, req *cmdv1alpha1.WaitRequest) (*cmdv1alpha1.WaitResponse, error) {
 	if !req.HasId() {
-		return nil, status.Error(codes.InvalidArgument, "id is required")
+		return nil, invalid("id is required")
 	}
 
 	id := req.GetId()
@@ -154,7 +158,7 @@ func (s *Server) Wait(ctx context.Context, req *cmdv1alpha1.WaitRequest) (*cmdv1
 	s.mu.Unlock()
 
 	if !ok {
-		return nil, status.Errorf(codes.NotFound, "process %s not found", id)
+		return nil, notFound("process %s not found", id)
 	}
 
 	if err := cmd.Wait(); err != nil {
@@ -168,13 +172,15 @@ func (s *Server) Wait(ctx context.Context, req *cmdv1alpha1.WaitRequest) (*cmdv1
 	delete(s.procs, id)
 	s.mu.Unlock()
 
-	exitCode := int32(cmd.ProcessState.ExitCode())
-	return (&cmdv1alpha1.WaitResponse_builder{ExitCode: &exitCode}).Build(), nil
+	res := &cmdv1alpha1.WaitResponse_builder{
+		ExitCode: new(int32(cmd.ProcessState.ExitCode())),
+	}
+	return res.Build(), nil
 }
 
 func (s *Server) Signal(ctx context.Context, req *cmdv1alpha1.SignalRequest) (*cmdv1alpha1.SignalResponse, error) {
 	if !req.HasId() {
-		return nil, status.Error(codes.InvalidArgument, "id is required")
+		return nil, invalid("id is required")
 	}
 
 	id := req.GetId()
@@ -184,19 +190,20 @@ func (s *Server) Signal(ctx context.Context, req *cmdv1alpha1.SignalRequest) (*c
 	s.mu.Unlock()
 
 	if !ok {
-		return nil, status.Errorf(codes.NotFound, "process %s not found", id)
+		return nil, notFound("process %s not found", id)
 	}
 
 	sig, err := osSignal(req.GetSignal())
 	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, err
 	}
 
 	if err := cmd.Process.Signal(sig); err != nil {
 		return nil, err
 	}
 
-	return (&cmdv1alpha1.SignalResponse_builder{}).Build(), nil
+	res := &cmdv1alpha1.SignalResponse_builder{}
+	return res.Build(), nil
 }
 
 func osSignal(sig cmdv1alpha1.Signal) (os.Signal, error) {
@@ -220,6 +227,14 @@ func osSignal(sig cmdv1alpha1.Signal) (os.Signal, error) {
 	case cmdv1alpha1.Signal_SIGNAL_STOP:
 		return syscall.SIGSTOP, nil
 	default:
-		return nil, fmt.Errorf("unsupported signal: %s", sig)
+		return nil, invalid("unsupported signal: %s", sig)
 	}
+}
+
+func invalid(msg string, args ...any) error {
+	return status.Errorf(codes.InvalidArgument, msg, args...)
+}
+
+func notFound(msg string, args ...any) error {
+	return status.Errorf(codes.NotFound, msg, args...)
 }

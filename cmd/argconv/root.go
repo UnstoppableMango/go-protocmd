@@ -21,13 +21,15 @@ var rootCmd = &cobra.Command{
 		if err := d.Decode(&req); err != nil {
 			cli.Fail(err)
 		}
-		res, err := conv.HandleArgs(cmd.Context(), &req)
+
+		a, err := conv.Args(req.GetSpec().ProtoReflect())
 		if err != nil {
 			cli.Fail(err)
 		}
 
+		res := &cmdv1alpha1.ArgsResponse_builder{Args: a}
 		enc := codec.ArgsResponse.NewEncoder(cmd.OutOrStdout())
-		if err := enc.Encode(res); err != nil {
+		if err := enc.Encode(res.Build()); err != nil {
 			cli.Fail(err)
 		}
 	},

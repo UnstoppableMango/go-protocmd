@@ -5,7 +5,7 @@ import (
 	"os/exec"
 
 	cmdv1alpha1 "github.com/unstoppablemango/go-protocmd/gen/dev/unmango/cmd/v1alpha1"
-	"github.com/unstoppablemango/go-protocmd/pkg/stream"
+	"github.com/unstoppablemango/go-protocmd/pkg/process/stream"
 )
 
 func CommandContext(ctx context.Context, proc *cmdv1alpha1.Process) *exec.Cmd {
