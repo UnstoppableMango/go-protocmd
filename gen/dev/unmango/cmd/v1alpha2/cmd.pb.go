@@ -1002,11 +1002,15 @@ const file_dev_unmango_cmd_v1alpha2_cmd_proto_rawDesc = "" +
 	"\x04path\x18\x01 \x01(\tR\x04path\x12\x12\n" +
 	"\x04args\x18\x02 \x03(\tR\x04args\x12\x10\n" +
 	"\x03env\x18\x03 \x03(\tR\x03env\x12\x10\n" +
-	"\x03cwd\x18\x04 \x01(\tR\x03cwd2\xbf\x02\n" +
+	"\x03cwd\x18\x04 \x01(\tR\x03cwd2\xbc\x02\n" +
+	"\x0eBuilderService\x12a\n" +
+	"\bFromJson\x12).dev.unmango.cmd.v1alpha2.FromJsonRequest\x1a*.dev.unmango.cmd.v1alpha2.FromJsonResponse\x12a\n" +
+	"\bFromYaml\x12).dev.unmango.cmd.v1alpha2.FromYamlRequest\x1a*.dev.unmango.cmd.v1alpha2.FromYamlResponse\x12d\n" +
+	"\tFromProto\x12*.dev.unmango.cmd.v1alpha2.FromProtoRequest\x1a+.dev.unmango.cmd.v1alpha2.FromProtoResponse2\xc4\x02\n" +
 	"\x11ConversionService\x12a\n" +
 	"\bFromJson\x12).dev.unmango.cmd.v1alpha2.FromJsonRequest\x1a*.dev.unmango.cmd.v1alpha2.FromJsonResponse\x12a\n" +
 	"\bFromYaml\x12).dev.unmango.cmd.v1alpha2.FromYamlRequest\x1a*.dev.unmango.cmd.v1alpha2.FromYamlResponse\x12d\n" +
-	"\tFromProto\x12*.dev.unmango.cmd.v1alpha2.FromProtoRequest\x1a+.dev.unmango.cmd.v1alpha2.FromProtoResponse2f\n" +
+	"\tFromProto\x12*.dev.unmango.cmd.v1alpha2.FromProtoRequest\x1a+.dev.unmango.cmd.v1alpha2.FromProtoResponse\x1a\x03\x88\x02\x012f\n" +
 	"\x10ExecutionService\x12R\n" +
 	"\x03Run\x12$.dev.unmango.cmd.v1alpha2.RunRequest\x1a%.dev.unmango.cmd.v1alpha2.RunResponseB\xfd\x01\n" +
 	"\x1ccom.dev.unmango.cmd.v1alpha2B\bCmdProtoP\x01ZPgithub.com/unstoppablemango/go-protocmd/gen/dev/unmango/cmd/v1alpha2;cmdv1alpha2\xa2\x02\x03DUC\xaa\x02\x18Dev.Unmango.Cmd.V1alpha2\xca\x02\x18Dev\\Unmango\\Cmd\\V1alpha2\xe2\x02$Dev\\Unmango\\Cmd\\V1alpha2\\GPBMetadata\xea\x02\x1bDev::Unmango::Cmd::V1alpha2b\beditionsp\xe9\a"
@@ -1032,16 +1036,22 @@ var file_dev_unmango_cmd_v1alpha2_cmd_proto_depIdxs = []int32{
 	9,  // 3: dev.unmango.cmd.v1alpha2.FromProtoResponse.process:type_name -> dev.unmango.cmd.v1alpha2.Process
 	9,  // 4: dev.unmango.cmd.v1alpha2.RunRequest.process:type_name -> dev.unmango.cmd.v1alpha2.Process
 	8,  // 5: dev.unmango.cmd.v1alpha2.RunResponse.exit:type_name -> dev.unmango.cmd.v1alpha2.ExitResult
-	0,  // 6: dev.unmango.cmd.v1alpha2.ConversionService.FromJson:input_type -> dev.unmango.cmd.v1alpha2.FromJsonRequest
-	1,  // 7: dev.unmango.cmd.v1alpha2.ConversionService.FromYaml:input_type -> dev.unmango.cmd.v1alpha2.FromYamlRequest
-	2,  // 8: dev.unmango.cmd.v1alpha2.ConversionService.FromProto:input_type -> dev.unmango.cmd.v1alpha2.FromProtoRequest
-	6,  // 9: dev.unmango.cmd.v1alpha2.ExecutionService.Run:input_type -> dev.unmango.cmd.v1alpha2.RunRequest
-	3,  // 10: dev.unmango.cmd.v1alpha2.ConversionService.FromJson:output_type -> dev.unmango.cmd.v1alpha2.FromJsonResponse
-	4,  // 11: dev.unmango.cmd.v1alpha2.ConversionService.FromYaml:output_type -> dev.unmango.cmd.v1alpha2.FromYamlResponse
-	5,  // 12: dev.unmango.cmd.v1alpha2.ConversionService.FromProto:output_type -> dev.unmango.cmd.v1alpha2.FromProtoResponse
-	7,  // 13: dev.unmango.cmd.v1alpha2.ExecutionService.Run:output_type -> dev.unmango.cmd.v1alpha2.RunResponse
-	10, // [10:14] is the sub-list for method output_type
-	6,  // [6:10] is the sub-list for method input_type
+	0,  // 6: dev.unmango.cmd.v1alpha2.BuilderService.FromJson:input_type -> dev.unmango.cmd.v1alpha2.FromJsonRequest
+	1,  // 7: dev.unmango.cmd.v1alpha2.BuilderService.FromYaml:input_type -> dev.unmango.cmd.v1alpha2.FromYamlRequest
+	2,  // 8: dev.unmango.cmd.v1alpha2.BuilderService.FromProto:input_type -> dev.unmango.cmd.v1alpha2.FromProtoRequest
+	0,  // 9: dev.unmango.cmd.v1alpha2.ConversionService.FromJson:input_type -> dev.unmango.cmd.v1alpha2.FromJsonRequest
+	1,  // 10: dev.unmango.cmd.v1alpha2.ConversionService.FromYaml:input_type -> dev.unmango.cmd.v1alpha2.FromYamlRequest
+	2,  // 11: dev.unmango.cmd.v1alpha2.ConversionService.FromProto:input_type -> dev.unmango.cmd.v1alpha2.FromProtoRequest
+	6,  // 12: dev.unmango.cmd.v1alpha2.ExecutionService.Run:input_type -> dev.unmango.cmd.v1alpha2.RunRequest
+	3,  // 13: dev.unmango.cmd.v1alpha2.BuilderService.FromJson:output_type -> dev.unmango.cmd.v1alpha2.FromJsonResponse
+	4,  // 14: dev.unmango.cmd.v1alpha2.BuilderService.FromYaml:output_type -> dev.unmango.cmd.v1alpha2.FromYamlResponse
+	5,  // 15: dev.unmango.cmd.v1alpha2.BuilderService.FromProto:output_type -> dev.unmango.cmd.v1alpha2.FromProtoResponse
+	3,  // 16: dev.unmango.cmd.v1alpha2.ConversionService.FromJson:output_type -> dev.unmango.cmd.v1alpha2.FromJsonResponse
+	4,  // 17: dev.unmango.cmd.v1alpha2.ConversionService.FromYaml:output_type -> dev.unmango.cmd.v1alpha2.FromYamlResponse
+	5,  // 18: dev.unmango.cmd.v1alpha2.ConversionService.FromProto:output_type -> dev.unmango.cmd.v1alpha2.FromProtoResponse
+	7,  // 19: dev.unmango.cmd.v1alpha2.ExecutionService.Run:output_type -> dev.unmango.cmd.v1alpha2.RunResponse
+	13, // [13:20] is the sub-list for method output_type
+	6,  // [6:13] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
 	6,  // [6:6] is the sub-list for extension extendee
 	0,  // [0:6] is the sub-list for field type_name
@@ -1060,7 +1070,7 @@ func file_dev_unmango_cmd_v1alpha2_cmd_proto_init() {
 			NumEnums:      0,
 			NumMessages:   10,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_dev_unmango_cmd_v1alpha2_cmd_proto_goTypes,
 		DependencyIndexes: file_dev_unmango_cmd_v1alpha2_cmd_proto_depIdxs,

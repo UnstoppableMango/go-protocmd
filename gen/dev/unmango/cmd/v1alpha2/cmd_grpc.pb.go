@@ -19,6 +19,190 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	BuilderService_FromJson_FullMethodName  = "/dev.unmango.cmd.v1alpha2.BuilderService/FromJson"
+	BuilderService_FromYaml_FullMethodName  = "/dev.unmango.cmd.v1alpha2.BuilderService/FromYaml"
+	BuilderService_FromProto_FullMethodName = "/dev.unmango.cmd.v1alpha2.BuilderService/FromProto"
+)
+
+// BuilderServiceClient is the client API for BuilderService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type BuilderServiceClient interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+	FromJson(ctx context.Context, in *FromJsonRequest, opts ...grpc.CallOption) (*FromJsonResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+	FromYaml(ctx context.Context, in *FromYamlRequest, opts ...grpc.CallOption) (*FromYamlResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+	FromProto(ctx context.Context, in *FromProtoRequest, opts ...grpc.CallOption) (*FromProtoResponse, error)
+}
+
+type builderServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBuilderServiceClient(cc grpc.ClientConnInterface) BuilderServiceClient {
+	return &builderServiceClient{cc}
+}
+
+func (c *builderServiceClient) FromJson(ctx context.Context, in *FromJsonRequest, opts ...grpc.CallOption) (*FromJsonResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FromJsonResponse)
+	err := c.cc.Invoke(ctx, BuilderService_FromJson_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *builderServiceClient) FromYaml(ctx context.Context, in *FromYamlRequest, opts ...grpc.CallOption) (*FromYamlResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FromYamlResponse)
+	err := c.cc.Invoke(ctx, BuilderService_FromYaml_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *builderServiceClient) FromProto(ctx context.Context, in *FromProtoRequest, opts ...grpc.CallOption) (*FromProtoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FromProtoResponse)
+	err := c.cc.Invoke(ctx, BuilderService_FromProto_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BuilderServiceServer is the server API for BuilderService service.
+// All implementations must embed UnimplementedBuilderServiceServer
+// for forward compatibility.
+type BuilderServiceServer interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+	FromJson(context.Context, *FromJsonRequest) (*FromJsonResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+	FromYaml(context.Context, *FromYamlRequest) (*FromYamlResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
+	FromProto(context.Context, *FromProtoRequest) (*FromProtoResponse, error)
+	mustEmbedUnimplementedBuilderServiceServer()
+}
+
+// UnimplementedBuilderServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedBuilderServiceServer struct{}
+
+func (UnimplementedBuilderServiceServer) FromJson(context.Context, *FromJsonRequest) (*FromJsonResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method FromJson not implemented")
+}
+func (UnimplementedBuilderServiceServer) FromYaml(context.Context, *FromYamlRequest) (*FromYamlResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method FromYaml not implemented")
+}
+func (UnimplementedBuilderServiceServer) FromProto(context.Context, *FromProtoRequest) (*FromProtoResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method FromProto not implemented")
+}
+func (UnimplementedBuilderServiceServer) mustEmbedUnimplementedBuilderServiceServer() {}
+func (UnimplementedBuilderServiceServer) testEmbeddedByValue()                        {}
+
+// UnsafeBuilderServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BuilderServiceServer will
+// result in compilation errors.
+type UnsafeBuilderServiceServer interface {
+	mustEmbedUnimplementedBuilderServiceServer()
+}
+
+func RegisterBuilderServiceServer(s grpc.ServiceRegistrar, srv BuilderServiceServer) {
+	// If the following call panics, it indicates UnimplementedBuilderServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&BuilderService_ServiceDesc, srv)
+}
+
+func _BuilderService_FromJson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FromJsonRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BuilderServiceServer).FromJson(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BuilderService_FromJson_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BuilderServiceServer).FromJson(ctx, req.(*FromJsonRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BuilderService_FromYaml_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FromYamlRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BuilderServiceServer).FromYaml(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BuilderService_FromYaml_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BuilderServiceServer).FromYaml(ctx, req.(*FromYamlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BuilderService_FromProto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FromProtoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BuilderServiceServer).FromProto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BuilderService_FromProto_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BuilderServiceServer).FromProto(ctx, req.(*FromProtoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// BuilderService_ServiceDesc is the grpc.ServiceDesc for BuilderService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var BuilderService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "dev.unmango.cmd.v1alpha2.BuilderService",
+	HandlerType: (*BuilderServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "FromJson",
+			Handler:    _BuilderService_FromJson_Handler,
+		},
+		{
+			MethodName: "FromYaml",
+			Handler:    _BuilderService_FromYaml_Handler,
+		},
+		{
+			MethodName: "FromProto",
+			Handler:    _BuilderService_FromProto_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "dev/unmango/cmd/v1alpha2/cmd.proto",
+}
+
+const (
 	ConversionService_FromJson_FullMethodName  = "/dev.unmango.cmd.v1alpha2.ConversionService/FromJson"
 	ConversionService_FromYaml_FullMethodName  = "/dev.unmango.cmd.v1alpha2.ConversionService/FromYaml"
 	ConversionService_FromProto_FullMethodName = "/dev.unmango.cmd.v1alpha2.ConversionService/FromProto"
@@ -27,9 +211,16 @@ const (
 // ConversionServiceClient is the client API for ConversionService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// Deprecated: use BuilderService. This was a naming error.
+//
+// Deprecated: Do not use.
 type ConversionServiceClient interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	FromJson(ctx context.Context, in *FromJsonRequest, opts ...grpc.CallOption) (*FromJsonResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	FromYaml(ctx context.Context, in *FromYamlRequest, opts ...grpc.CallOption) (*FromYamlResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	FromProto(ctx context.Context, in *FromProtoRequest, opts ...grpc.CallOption) (*FromProtoResponse, error)
 }
 
@@ -37,6 +228,7 @@ type conversionServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
+// Deprecated: Do not use.
 func NewConversionServiceClient(cc grpc.ClientConnInterface) ConversionServiceClient {
 	return &conversionServiceClient{cc}
 }
@@ -74,9 +266,16 @@ func (c *conversionServiceClient) FromProto(ctx context.Context, in *FromProtoRe
 // ConversionServiceServer is the server API for ConversionService service.
 // All implementations must embed UnimplementedConversionServiceServer
 // for forward compatibility.
+//
+// Deprecated: use BuilderService. This was a naming error.
+//
+// Deprecated: Do not use.
 type ConversionServiceServer interface {
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	FromJson(context.Context, *FromJsonRequest) (*FromJsonResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	FromYaml(context.Context, *FromYamlRequest) (*FromYamlResponse, error)
+	// buf:lint:ignore RPC_REQUEST_RESPONSE_UNIQUE
 	FromProto(context.Context, *FromProtoRequest) (*FromProtoResponse, error)
 	mustEmbedUnimplementedConversionServiceServer()
 }
@@ -107,6 +306,7 @@ type UnsafeConversionServiceServer interface {
 	mustEmbedUnimplementedConversionServiceServer()
 }
 
+// Deprecated: Do not use.
 func RegisterConversionServiceServer(s grpc.ServiceRegistrar, srv ConversionServiceServer) {
 	// If the following call panics, it indicates UnimplementedConversionServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an

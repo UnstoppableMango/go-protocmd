@@ -19,5 +19,5 @@ plugins:
 
 inputs:
   - module: buf.build/unmango/apis
-    paths:
-      - dev/unmango/cmd
+    # paths:
+    #   - unmango/cli
