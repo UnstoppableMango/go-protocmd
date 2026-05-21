@@ -105,10 +105,6 @@ schema = 3
     version = 'v0.16.5'
     hash = 'sha256-SmhElF/fUxZBHUTdY6Nfuc5/5zLen/PD5aim6RiqVVI='
 
-  [mod.'github.com/unstoppablemango/godec']
-    version = 'v0.0.0-20260518055026-60e3301453c7'
-    hash = 'sha256-jfcXmhbTVoTJf4MctoJzaNq8VTLl8vnRDC4r0dsSuUY='
-
   [mod.'github.com/xo/terminfo']
     version = 'v0.0.0-20220910002029-abceb7e1c41e'
     hash = 'sha256-GyCDxxMQhXA3Pi/TsWXpA8cX5akEoZV7CFx4RO3rARU='

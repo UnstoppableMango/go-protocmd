@@ -8,7 +8,6 @@ require (
 	github.com/onsi/gomega v1.41.0
 	github.com/spf13/cobra v1.10.2
 	github.com/unmango/go v0.16.5
-	github.com/unstoppablemango/godec v0.0.0-20260518055026-60e3301453c7
 	google.golang.org/grpc v1.81.1
 	google.golang.org/protobuf v1.36.11
 )
