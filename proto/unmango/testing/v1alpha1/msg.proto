@@ -1,0 +1,14 @@
+edition = "2024";
+
+package unmango.testing.v1alpha1;
+
+message Example {
+  string str = 1;
+  int32 integer = 2;
+  bool opt = 4;
+  Nested nested = 5;
+
+  message Nested {
+    int64 long = 1;
+  }
+}

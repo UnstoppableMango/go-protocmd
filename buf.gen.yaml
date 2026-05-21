@@ -18,6 +18,7 @@ plugins:
       - paths=source_relative
 
 inputs:
+  - directory: proto
   - module: buf.build/unmango/apis
     paths:
       - unmango/cli
