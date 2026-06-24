@@ -3,17 +3,17 @@ package proto
 import (
 	"fmt"
 
-	cliv1alpha1 "github.com/unstoppablemango/go-protocmd/gen/unmango/cli/v1alpha1"
+	cli "github.com/unstoppablemango/go-protocmd/gen/unmango/cli/v1alpha1"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
 type Parser struct {
-	b *cliv1alpha1.Utility_builder
+	b *cli.Utility_builder
 }
 
-func Parse(msg *anypb.Any) (*cliv1alpha1.Utility, error) {
-	p := &Parser{&cliv1alpha1.Utility_builder{}}
+func Parse(msg *anypb.Any) (*cli.Utility, error) {
+	p := &Parser{&cli.Utility_builder{}}
 	return p.b.Build(), nil
 }
 
@@ -25,7 +25,7 @@ func (p *Parser) message(msg protoreflect.Message) {
 
 func (p *Parser) option(name string, has, get func() bool) {
 	if has() && get() {
-		opt := &cliv1alpha1.Option_builder{
+		opt := &cli.Option_builder{
 			Name: &name,
 		}
 		p.b.Options = append(p.b.Options, opt.Build())
