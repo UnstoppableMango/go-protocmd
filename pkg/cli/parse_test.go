@@ -134,6 +134,71 @@ var _ = Describe("Parse", func() {
 			Expect(lf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_SPACE))
 			Expect(lf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
 		})
+
+		It("parses long flag with hyphenated name", func() {
+			result, err := cli.Parse("--no-cache")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			lf := result.GetTokens()[0].GetLongFlag()
+			Expect(lf).NotTo(BeNil())
+			Expect(lf.GetName()).To(Equal("no-cache"))
+		})
+
+		It("parses long flag with hyphenated name and inline value", func() {
+			result, err := cli.Parse("--dry-run=true")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			lf := result.GetTokens()[0].GetLongFlag()
+			Expect(lf).NotTo(BeNil())
+			Expect(lf.GetName()).To(Equal("dry-run"))
+			Expect(lf.GetAssignment()).NotTo(BeNil())
+			Expect(lf.GetAssignment().GetValue()).To(Equal("true"))
+			Expect(lf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
+		})
+
+		It("parses long flag with empty inline value", func() {
+			result, err := cli.Parse("--output=")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			lf := result.GetTokens()[0].GetLongFlag()
+			Expect(lf).NotTo(BeNil())
+			Expect(lf.GetName()).To(Equal("output"))
+			Expect(lf.GetAssignment()).NotTo(BeNil())
+			Expect(lf.GetAssignment().GetValue()).To(Equal(""))
+			Expect(lf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
+			Expect(lf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_NONE))
+		})
+
+		It("parses long flag with inline double-quoted value containing spaces", func() {
+			result, err := cli.Parse(`--output="file name.txt"`)
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			lf := result.GetTokens()[0].GetLongFlag()
+			Expect(lf).NotTo(BeNil())
+			Expect(lf.GetName()).To(Equal("output"))
+			Expect(lf.GetAssignment()).NotTo(BeNil())
+			Expect(lf.GetAssignment().GetValue()).To(Equal("file name.txt"))
+			Expect(lf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
+			Expect(lf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
+		})
+
+		It("parses long flag with inline single-quoted value containing spaces", func() {
+			result, err := cli.Parse("--output='file name.txt'")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			lf := result.GetTokens()[0].GetLongFlag()
+			Expect(lf).NotTo(BeNil())
+			Expect(lf.GetName()).To(Equal("output"))
+			Expect(lf.GetAssignment()).NotTo(BeNil())
+			Expect(lf.GetAssignment().GetValue()).To(Equal("file name.txt"))
+			Expect(lf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
+			Expect(lf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_SINGLE))
+		})
 	})
 
 	Describe("short flags", func() {
@@ -250,6 +315,72 @@ var _ = Describe("Parse", func() {
 			Expect(sf.GetAssignment().GetValue()).To(Equal("file.txt"))
 			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_SPACE))
 			Expect(sf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
+		})
+
+		It("parses short flag with adjacent single-quoted value", func() {
+			result, err := cli.Parse("-o'file.txt'")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"o"}))
+			Expect(sf.GetAssignment()).NotTo(BeNil())
+			Expect(sf.GetAssignment().GetValue()).To(Equal("file.txt"))
+			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_ADJACENT))
+			Expect(sf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_SINGLE))
+		})
+
+		It("parses short flag with adjacent double-quoted value", func() {
+			result, err := cli.Parse(`-o"file.txt"`)
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"o"}))
+			Expect(sf.GetAssignment()).NotTo(BeNil())
+			Expect(sf.GetAssignment().GetValue()).To(Equal("file.txt"))
+			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_ADJACENT))
+			Expect(sf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
+		})
+
+		It("parses short flag with empty inline value", func() {
+			result, err := cli.Parse("-o=")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"o"}))
+			Expect(sf.GetAssignment()).NotTo(BeNil())
+			Expect(sf.GetAssignment().GetValue()).To(Equal(""))
+			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
+			Expect(sf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_NONE))
+		})
+
+		It("parses short flag cluster with inline value on last flag", func() {
+			result, err := cli.Parse("-abc=val")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"a", "b", "c"}))
+			Expect(sf.GetAssignment()).NotTo(BeNil())
+			Expect(sf.GetAssignment().GetValue()).To(Equal("val"))
+			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
+		})
+
+		It("treats all-alpha characters after dash as flag name cluster with no assignment", func() {
+			result, err := cli.Parse("-abcval")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"a", "b", "c", "v", "a", "l"}))
+			Expect(sf.GetAssignment()).To(BeNil())
 		})
 	})
 
@@ -404,5 +535,20 @@ var _ = Describe("Parse", func() {
 		Expect(result.GetTokens()[0].GetShortFlag().GetNames()).To(Equal([]string{"v"}))
 		Expect(result.GetTokens()[1].GetLongFlag()).NotTo(BeNil())
 		Expect(result.GetTokens()[1].GetLongFlag().GetName()).To(Equal("output"))
+	})
+
+	It("parses mixed short flag, long flag with value, and word", func() {
+		result, err := cli.Parse("-v --output=foo bar")
+
+		Expect(err).NotTo(HaveOccurred())
+		Expect(result.GetTokens()).To(HaveLen(3))
+		Expect(result.GetTokens()[0].GetShortFlag()).NotTo(BeNil())
+		Expect(result.GetTokens()[0].GetShortFlag().GetNames()).To(Equal([]string{"v"}))
+		Expect(result.GetTokens()[1].GetLongFlag()).NotTo(BeNil())
+		Expect(result.GetTokens()[1].GetLongFlag().GetName()).To(Equal("output"))
+		Expect(result.GetTokens()[1].GetLongFlag().GetAssignment()).NotTo(BeNil())
+		Expect(result.GetTokens()[1].GetLongFlag().GetAssignment().GetValue()).To(Equal("foo"))
+		Expect(result.GetTokens()[2].GetWord()).NotTo(BeNil())
+		Expect(result.GetTokens()[2].GetWord().GetValue()).To(Equal("bar"))
 	})
 })
