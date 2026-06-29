@@ -106,6 +106,34 @@ var _ = Describe("Parse", func() {
 			Expect(lf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
 			Expect(lf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
 		})
+
+		It("parses long flag with space-separated single-quoted value", func() {
+			result, err := cli.Parse("--output 'file.txt'")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			lf := result.GetTokens()[0].GetLongFlag()
+			Expect(lf).NotTo(BeNil())
+			Expect(lf.GetName()).To(Equal("output"))
+			Expect(lf.GetAssignment()).NotTo(BeNil())
+			Expect(lf.GetAssignment().GetValue()).To(Equal("file.txt"))
+			Expect(lf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_SPACE))
+			Expect(lf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_SINGLE))
+		})
+
+		It("parses long flag with space-separated double-quoted value", func() {
+			result, err := cli.Parse(`--output "file.txt"`)
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			lf := result.GetTokens()[0].GetLongFlag()
+			Expect(lf).NotTo(BeNil())
+			Expect(lf.GetName()).To(Equal("output"))
+			Expect(lf.GetAssignment()).NotTo(BeNil())
+			Expect(lf.GetAssignment().GetValue()).To(Equal("file.txt"))
+			Expect(lf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_SPACE))
+			Expect(lf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
+		})
 	})
 
 	Describe("short flags", func() {
@@ -167,6 +195,62 @@ var _ = Describe("Parse", func() {
 			Expect(sf.GetAssignment().GetValue()).To(Equal("file.txt"))
 			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_SPACE))
 		})
+
+		It("parses short flag with single-quoted inline value", func() {
+			result, err := cli.Parse("-o='file.txt'")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"o"}))
+			Expect(sf.GetAssignment()).NotTo(BeNil())
+			Expect(sf.GetAssignment().GetValue()).To(Equal("file.txt"))
+			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
+			Expect(sf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_SINGLE))
+		})
+
+		It("parses short flag with double-quoted inline value", func() {
+			result, err := cli.Parse(`-o="file.txt"`)
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"o"}))
+			Expect(sf.GetAssignment()).NotTo(BeNil())
+			Expect(sf.GetAssignment().GetValue()).To(Equal("file.txt"))
+			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_INLINE))
+			Expect(sf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
+		})
+
+		It("parses short flag with space-separated single-quoted value", func() {
+			result, err := cli.Parse("-o 'file.txt'")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"o"}))
+			Expect(sf.GetAssignment()).NotTo(BeNil())
+			Expect(sf.GetAssignment().GetValue()).To(Equal("file.txt"))
+			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_SPACE))
+			Expect(sf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_SINGLE))
+		})
+
+		It("parses short flag with space-separated double-quoted value", func() {
+			result, err := cli.Parse(`-o "file.txt"`)
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(1))
+			sf := result.GetTokens()[0].GetShortFlag()
+			Expect(sf).NotTo(BeNil())
+			Expect(sf.GetNames()).To(Equal([]string{"o"}))
+			Expect(sf.GetAssignment()).NotTo(BeNil())
+			Expect(sf.GetAssignment().GetValue()).To(Equal("file.txt"))
+			Expect(sf.GetAssignment().GetStyle()).To(Equal(cliv1alpha1.AssignmentStyle_ASSIGNMENT_STYLE_SPACE))
+			Expect(sf.GetAssignment().GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
+		})
 	})
 
 	Describe("words", func() {
@@ -201,6 +285,16 @@ var _ = Describe("Parse", func() {
 			Expect(w).NotTo(BeNil())
 			Expect(w.GetValue()).To(Equal("foo"))
 			Expect(w.GetQuoteStyle()).To(Equal(cliv1alpha1.QuoteStyle_QUOTE_STYLE_DOUBLE))
+		})
+
+		It("parses multiple bare words as separate tokens", func() {
+			result, err := cli.Parse("foo bar baz")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(3))
+			Expect(result.GetTokens()[0].GetWord().GetValue()).To(Equal("foo"))
+			Expect(result.GetTokens()[1].GetWord().GetValue()).To(Equal("bar"))
+			Expect(result.GetTokens()[2].GetWord().GetValue()).To(Equal("baz"))
 		})
 	})
 
@@ -243,6 +337,26 @@ var _ = Describe("Parse", func() {
 			Expect(result.GetTokens()[0].GetEndOfOptions()).NotTo(BeNil())
 			Expect(result.GetTokens()[1].GetWord()).NotTo(BeNil())
 			Expect(result.GetTokens()[1].GetWord().GetValue()).To(Equal("--not-a-flag"))
+		})
+
+		It("treats short-flag-looking token after -- as word", func() {
+			result, err := cli.Parse("-- -v")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(2))
+			Expect(result.GetTokens()[0].GetEndOfOptions()).NotTo(BeNil())
+			Expect(result.GetTokens()[1].GetWord()).NotTo(BeNil())
+			Expect(result.GetTokens()[1].GetWord().GetValue()).To(Equal("-v"))
+		})
+
+		It("treats short-flag cluster after -- as word", func() {
+			result, err := cli.Parse("-- -abc")
+
+			Expect(err).NotTo(HaveOccurred())
+			Expect(result.GetTokens()).To(HaveLen(2))
+			Expect(result.GetTokens()[0].GetEndOfOptions()).NotTo(BeNil())
+			Expect(result.GetTokens()[1].GetWord()).NotTo(BeNil())
+			Expect(result.GetTokens()[1].GetWord().GetValue()).To(Equal("-abc"))
 		})
 	})
 
